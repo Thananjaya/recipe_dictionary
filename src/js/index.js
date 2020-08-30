@@ -1,4 +1,5 @@
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
 import { elements, renderLoader, clearLoader } from './views/base'; 
 
@@ -11,6 +12,11 @@ import { elements, renderLoader, clearLoader } from './views/base';
 const state = {
 
 }
+
+
+/**
+ * Search Controller
+ */
 
 const searchController = async () => {
     const query = searchView.getInput();
@@ -42,4 +48,15 @@ elements.paginationPage.addEventListener('click', event => {
         console.log(goToPage)
     }
 })
+
+/**
+ * Recipe controller 
+ * */
+const recipeController = async () => {
+    const recipe = new Recipe(35477);
+    await recipe.getRecipe();
+    console.log(recipe)
+}
+
+recipeController()
 
