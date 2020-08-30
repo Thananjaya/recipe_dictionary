@@ -32,3 +32,14 @@ elements.searchButton.addEventListener('submit', e => {
     searchController()
 })
 
+elements.paginationPage.addEventListener('click', event => {
+    event.preventDefault();
+    const btn = event.target.closest('.btn-inline');
+    if(btn) {
+        searchView.clearResults();
+        const goToPage = parseInt(btn.dataset.goto, 10)
+        searchView.displayResults(state.search.results, goToPage);
+        console.log(goToPage)
+    }
+})
+

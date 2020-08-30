@@ -8,6 +8,7 @@ export const clearInput = () => {
 
 export const clearResults = () => {
     elements.searchResultsList.innerHTML = "";
+    elements.paginationPage.innerHTML = "";
 }
 
 const limitRecipeTitle = (title, limit = 25) => {
@@ -42,8 +43,55 @@ const renderRecipe = recipe => {
     elements.searchResultsList.insertAdjacentHTML('afterbegin', markup);
 }
 
-export const displayResults = recipes => {
-    recipes.forEach(element => {
+const nextButton = (page) => {
+    return `  
+        <button class="btn-inline results__btn--next" data-goto=${page+1}>
+            <span>Page ${page + 1}</span>
+            <svg class="search__icon">
+                <use href="img/icons.svg#icon-triangle-right"></use>
+            </svg>
+        </button>
+    `
+} 
+
+const prevButton = (page) => {
+    return`
+        <button class="btn-inline results__btn--prev" data-goto=${page - 1}>
+            <svg class="search__icon">
+                <use href="img/icons.svg#icon-triangle-left"></use>
+            </svg>
+            <span>Page ${page - 1}</span>
+        </button>
+    `
+}
+
+const renderPaginationButtons = (page, totalRecordCount, resPerPage) => {
+    const pages = Math.ceil(totalRecordCount / resPerPage);
+
+    let button;
+    if (pages > 1) {
+        if(page === 1) {
+            button = nextButton(page)
+        } else if(page < pages) {
+            button = `
+                ${nextButton(page)}
+                ${prevButton(page)} 
+            `
+        } else if(pages === page) {
+            button = prevButton(page)
+        }
+    }
+
+    elements.paginationPage.insertAdjacentHTML('afterbegin', button);
+};
+
+export const displayResults = (recipes, page = 1, countPerPage = 10) => {
+    const firstRecord = (page - 1) * countPerPage;
+    const lastRecord = firstRecord + countPerPage;
+
+    recipes.slice(firstRecord, lastRecord).forEach(element => {
         renderRecipe(element)
     });
+
+    renderPaginationButtons(page, recipes.length, countPerPage);
 }
